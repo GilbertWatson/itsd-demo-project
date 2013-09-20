@@ -1,16 +1,19 @@
 require(snowfall)
 
 #make some fake data
-sizex = 200000
+sizex = 10000
 x <- data.frame(one = sample(x = seq(1, 100, 1),size = sizex, replace = T),
                 two = sample(x = seq(1, 100, 1),size = sizex, replace = T),
                 three = sample(x = seq(1, 100, 1),size = sizex, replace = T),
                 four = sample(x = seq(1, 100, 1),size = sizex, replace = T))
 
 #one processor
- one_p <- system.time(apply(X = x, MARGIN = 1, FUN = function(x) {return(mean(x, na.rm = T))}))
+ one_p <- system.time(apply(X = x, MARGIN = 1, FUN = function(x) {return((mean(x, na.rm = T)*mean(rnbinom(n=1000,prob=runif(n=1,min=0,max=10)/10,size=300))))}))
 
 #32 processors
 sfInit(parallel = T, cpus = 32, type = "MPI")
-thirtytwo_p <- system.time(sfApply(x = x, margin = 1, fun= function(x) {return(mean(x, na.rm = T))}))
+thirtytwo_p <- system.time(sfApply(x = x, margin = 1, fun= function(x) {return((mean(x, na.rm = T)*mean(rnbinom(n=1000,prob=runif(n=1,min=0,max=10)/10,size=300))))}))
 sfStop()
+
+#print
+cat(paste("With One Processor: ", one_p[3], "\nWith 32 Processors: ", thirtytwo_p[3],sep=""))
