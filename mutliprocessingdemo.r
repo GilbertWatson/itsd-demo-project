@@ -7,12 +7,23 @@ x <- data.frame(one = sample(x = seq(1, 100, 1),size = sizex, replace = T),
                 three = sample(x = seq(1, 100, 1),size = sizex, replace = T),
                 four = sample(x = seq(1, 100, 1),size = sizex, replace = T))
 
+#make a function that does alot of sampling
+sf <- function(x) {
+  return((mean(x, na.rm = T)*mean(rnbinom(n=1000,
+                                          prob=runif(n=1,min=0,max=10)/10,
+                                          size=300))))
+}
+
 #one processor
- one_p <- system.time(apply(X = x, MARGIN = 1, FUN = function(x) {return((mean(x, na.rm = T)*mean(rnbinom(n=1000,prob=runif(n=1,min=0,max=10)/10,size=300))))}))
+one_p <- system.time(apply(X = x, 
+                           MARGIN = 1, 
+                           FUN = sf))
 
 #32 processors
 sfInit(parallel = T, cpus = 32, type = "MPI")
-thirtytwo_p <- system.time(sfApply(x = x, margin = 1, fun= function(x) {return((mean(x, na.rm = T)*mean(rnbinom(n=1000,prob=runif(n=1,min=0,max=10)/10,size=300))))}))
+thirtytwo_p <- system.time(sfApply(x = x, 
+                                   margin = 1, 
+                                   fun = sf))
 sfStop()
 
 #print
