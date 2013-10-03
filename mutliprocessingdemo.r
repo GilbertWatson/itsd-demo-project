@@ -9,9 +9,9 @@ x <- data.frame(one = sample(x = seq(1, 100, 1),size = sizex, replace = T),
 
 #make a function that does alot of sampling
 sf <- function(x) {
-  return((mean(x, na.rm = T)*mean(rnbinom(n=1000,
-                                          prob=runif(n=1,min=0,max=10)/10,
-                                          size=300))))
+  return((mean(x, na.rm = T)*mean(rnbinom(n=1000, #1000 random samples from negative binomial
+                                          prob=runif(n=1,min=0,max=10)/10, #with a random p from a uniform
+                                          size=300)))) #with 300 targets for success out of 1000
 }
 
 #one processor
